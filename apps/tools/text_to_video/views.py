@@ -49,14 +49,42 @@ def text_to_video_generate_view(request):
     if not prompt:
         return JsonResponse({'error': 'الوصف مطلوب / Prompt is required'}, status=400)
 
-    rate = RESOLUTION_RATES.get(resolution, Decimal('4.5'))
-    cost = rate * Decimal(str(duration))
+    from apps.tools.text_to_video.models import TextToVideoSetting, TextToVideoModelPricing
+
+    setting = TextToVideoSetting.objects.first()
+    if setting:
+        if not setting.is_active:
+            return JsonResponse({'error': 'الأداة معطلة حالياً من قبل الإدارة / Tool is currently disabled'}, status=503)
+        if setting.is_maintenance_mode:
+            return JsonResponse({'error': 'الأداة في وضع الصيانة حالياً / Tool is under maintenance'}, status=503)
+        if len(prompt) > setting.max_prompt_length:
+            return JsonResponse({'error': f'تجاوز الوصف الحد الأقصى ({setting.max_prompt_length} حرف) / Prompt exceeds max length'}, status=400)
+        if duration > setting.max_duration_seconds:
+            return JsonResponse({'error': f'تجاوزت المدة الحد الأقصى ({setting.max_duration_seconds} ثانية) / Duration exceeds max'}, status=400)
+
+    pricing = TextToVideoModelPricing.objects.filter(is_active=True).first()
+    if pricing and pricing.billing_type == 'per_request':
+        if resolution == '1080p':
+            cost = pricing.fixed_cost_1080p
+        elif resolution == '4k':
+            cost = pricing.fixed_cost_4k
+        else:
+            cost = pricing.fixed_cost_720p
+    elif pricing and pricing.billing_type == 'per_second':
+        sec_rate = pricing.cost_per_second_1080p if resolution == '1080p' else pricing.cost_per_second_720p
+        cost = sec_rate * Decimal(str(duration))
+    else:
+        rate = RESOLUTION_RATES.get(resolution, Decimal('4.5'))
+        cost = rate * Decimal(str(duration))
+
+    allow_premium = (pricing.allowed_wallet in ('premium', 'both')) if pricing else True
 
     try:
         deduction = WalletService.validate_and_charge(
             user_id=str(request.user.id),
             cost=cost,
-            tool_name='text_to_video'
+            tool_name='text_to_video',
+            allow_premium=allow_premium
         )
     except InsufficientCreditsError as e:
         return JsonResponse({'error': str(e)}, status=402)

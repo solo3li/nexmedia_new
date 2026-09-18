@@ -145,6 +145,57 @@ def seed_all():
     )
     print("  ✓ CMS Custom Pages seeded")
 
+    # 6. Seed All 9 Tool Settings & Model Pricings
+    from apps.tools.tts.models import TtsSetting, TtsModelPricing
+    from apps.tools.stt.models import SttSetting, SttModelPricing
+    from apps.tools.text_to_video.models import TextToVideoSetting, TextToVideoModelPricing
+    from apps.tools.image_to_video.models import ImageToVideoSetting, ImageToVideoModelPricing
+    from apps.tools.reference_to_video.models import ReferenceToVideoSetting, ReferenceToVideoModelPricing
+    from apps.tools.lipsync.models import LipSyncSetting, LipSyncModelPricing
+    from apps.tools.motion_control.models import MotionControlSetting, MotionControlModelPricing
+    from apps.tools.text_to_image.models import TextToImageSetting, TextToImageModelPricing
+    from apps.tools.avatar_video.models import AvatarVideoSetting, AvatarVideoModelPricing
+
+    # TTS
+    TtsSetting.objects.get_or_create(id="00000000-0000-0000-0000-000000000001", defaults={'is_active': True, 'max_text_length': 5000, 'max_concurrent_operations': 10})
+    TtsModelPricing.objects.get_or_create(quality_level='standard', defaults={'model_name': 'gemini-2.5-flash-preview-tts', 'provider_name': 'Gemini', 'fixed_cost': Decimal('0.1000'), 'is_active': True})
+    TtsModelPricing.objects.get_or_create(quality_level='high', defaults={'model_name': 'gemini-2.5-flash-preview-tts', 'provider_name': 'Gemini', 'fixed_cost': Decimal('0.2500'), 'is_active': True})
+
+    # STT
+    SttSetting.objects.get_or_create(id="00000000-0000-0000-0000-000000000002", defaults={'is_active': True, 'max_audio_size_mb': 25, 'max_duration_seconds': 300})
+    SttModelPricing.objects.get_or_create(model_name='whisper-large-v3', defaults={'provider_name': 'Whisper', 'fixed_cost': Decimal('0.5000'), 'cost_per_minute': Decimal('0.2000'), 'is_active': True})
+
+    # Text to Video
+    TextToVideoSetting.objects.get_or_create(id="00000000-0000-0000-0000-000000000003", defaults={'is_active': True, 'default_resolution': '720p', 'max_duration_seconds': 30})
+    TextToVideoModelPricing.objects.get_or_create(model_name='veo 3.1 Fast', defaults={'provider_name': 'CrunAI', 'fixed_cost_720p': Decimal('30.0000'), 'fixed_cost_1080p': Decimal('37.5000'), 'fixed_cost_4k': Decimal('90.0000'), 'is_active': True})
+    TextToVideoModelPricing.objects.get_or_create(model_name='grok-imagine', defaults={'provider_name': 'CrunAI', 'billing_type': 'per_second', 'cost_per_second_720p': Decimal('4.5000'), 'cost_per_second_1080p': Decimal('8.0000'), 'is_active': True})
+
+    # Image to Video
+    ImageToVideoSetting.objects.get_or_create(id="00000000-0000-0000-0000-000000000004", defaults={'is_active': True, 'max_duration_seconds': 30, 'max_image_size_mb': 25})
+    ImageToVideoModelPricing.objects.get_or_create(model_name='veo 3.1 Fast', defaults={'provider_name': 'CrunAI', 'fixed_cost_720p': Decimal('30.0000'), 'fixed_cost_1080p': Decimal('37.5000'), 'is_active': True})
+
+    # Reference to Video
+    ReferenceToVideoSetting.objects.get_or_create(id="00000000-0000-0000-0000-000000000005", defaults={'is_active': True, 'max_duration_seconds': 30})
+    ReferenceToVideoModelPricing.objects.get_or_create(model_name='bytedance/seedance2-0-mini-r2v', defaults={'provider_name': 'CrunAI', 'fixed_cost': Decimal('15.0000'), 'cost_per_second_720p': Decimal('0.0286'), 'is_active': True})
+
+    # LipSync
+    LipSyncSetting.objects.get_or_create(id="00000000-0000-0000-0000-000000000006", defaults={'is_active': True, 'max_video_size_mb': 100, 'max_duration_seconds': 120})
+    LipSyncModelPricing.objects.get_or_create(model_name='vidu-lipsync-std', defaults={'provider_name': 'CrunAI', 'cost_per_generation': Decimal('10.0000'), 'cost_per_second': Decimal('0.5000'), 'is_active': True})
+
+    # Motion Control
+    MotionControlSetting.objects.get_or_create(id="00000000-0000-0000-0000-000000000007", defaults={'is_active': True, 'max_video_size_mb': 100, 'max_duration_seconds': 30})
+    MotionControlModelPricing.objects.get_or_create(model_name='kling-motion-control', defaults={'provider_name': 'KlingAI', 'cost_per_generation': Decimal('20.0000'), 'cost_per_second': Decimal('2.0000'), 'is_active': True})
+
+    # Text to Image
+    TextToImageSetting.objects.get_or_create(id="00000000-0000-0000-0000-000000000008", defaults={'is_active': True, 'max_prompt_length': 2000})
+    TextToImageModelPricing.objects.get_or_create(model_name='grok-imagine', defaults={'provider_name': 'CrunAI', 'cost_per_image': Decimal('2.0000'), 'is_active': True})
+
+    # Avatar Video
+    AvatarVideoSetting.objects.get_or_create(id="00000000-0000-0000-0000-000000000009", defaults={'is_active': True, 'max_text_length': 2000, 'max_duration_seconds': 60})
+    AvatarVideoModelPricing.objects.get_or_create(model_name='kling-avatar', defaults={'provider_name': 'KlingAI', 'cost_per_generation': Decimal('15.0000'), 'cost_per_second': Decimal('1.0000'), 'is_active': True})
+
+    print("  ✓ All 9 Tool Settings & Model Pricings seeded")
+
     print("🎉 Database seeding completed successfully!")
 
 if __name__ == '__main__':

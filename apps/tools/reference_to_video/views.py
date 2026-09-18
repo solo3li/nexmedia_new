@@ -27,14 +27,25 @@ def reference_to_video_generate_view(request):
     if not ref_file:
         return JsonResponse({'error': 'الملف المرجعي مطلوب / Reference file is required'}, status=400)
 
-    # Seedance model cost: 6.0 credits
-    cost = Decimal('6.0000')
+    from apps.tools.reference_to_video.models import ReferenceToVideoSetting, ReferenceToVideoModelPricing
+
+    setting = ReferenceToVideoSetting.objects.first()
+    if setting:
+        if not setting.is_active:
+            return JsonResponse({'error': 'الأداة معطلة حالياً من قبل الإدارة / Tool is currently disabled'}, status=503)
+        if setting.is_maintenance_mode:
+            return JsonResponse({'error': 'الأداة في وضع الصيانة حالياً / Tool is under maintenance'}, status=503)
+
+    pricing = ReferenceToVideoModelPricing.objects.filter(is_active=True).first()
+    cost = pricing.fixed_cost if pricing else Decimal('6.0000')
+    allow_premium = (pricing.allowed_wallet in ('premium', 'both')) if pricing else True
 
     try:
         deduction = WalletService.validate_and_charge(
             user_id=str(request.user.id),
             cost=cost,
-            tool_name='reference_to_video'
+            tool_name='reference_to_video',
+            allow_premium=allow_premium
         )
     except InsufficientCreditsError as e:
         return JsonResponse({'error': str(e)}, status=402)

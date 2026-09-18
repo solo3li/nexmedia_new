@@ -32,14 +32,29 @@ def text_to_image_generate_view(request):
     if not prompt:
         return JsonResponse({'error': 'الوصف مطلوب / Prompt is required'}, status=400)
 
-    # Cost: 2.0 credits
-    cost = Decimal('2.0000')
+    from apps.tools.text_to_image.models import TextToImageSetting, TextToImageModelPricing
+
+    # Dynamic Tool Settings Validation
+    setting = TextToImageSetting.objects.first()
+    if setting:
+        if not setting.is_active:
+            return JsonResponse({'error': 'الأداة معطلة حالياً من قبل الإدارة / Tool is currently disabled'}, status=503)
+        if setting.is_maintenance_mode:
+            return JsonResponse({'error': 'الأداة في وضع الصيانة حالياً / Tool is under maintenance'}, status=503)
+        if len(prompt) > setting.max_prompt_length:
+            return JsonResponse({'error': f'تجاوز الوصف الحد الأقصى ({setting.max_prompt_length} حرف) / Prompt exceeds max length'}, status=400)
+
+    # Dynamic Pricing
+    pricing = TextToImageModelPricing.objects.filter(is_active=True).first()
+    cost = pricing.cost_per_image if pricing else Decimal('2.0000')
+    allow_premium = (pricing.allowed_wallet in ('premium', 'both')) if pricing else True
 
     try:
         deduction = WalletService.validate_and_charge(
             user_id=str(request.user.id),
             cost=cost,
-            tool_name='text_to_image'
+            tool_name='text_to_image',
+            allow_premium=allow_premium
         )
     except InsufficientCreditsError as e:
         return JsonResponse({'error': str(e)}, status=402)

@@ -27,14 +27,25 @@ def lipsync_generate_view(request):
     if not video_file or not audio_file:
         return JsonResponse({'error': 'الفيديو وملف الصوت مطلوبان / Both video and audio files are required'}, status=400)
 
-    # Base cost: 4.0 credits
-    cost = Decimal('4.0000')
+    from apps.tools.lipsync.models import LipSyncSetting, LipSyncModelPricing
+
+    setting = LipSyncSetting.objects.first()
+    if setting:
+        if not setting.is_active:
+            return JsonResponse({'error': 'الأداة معطلة حالياً من قبل الإدارة / Tool is currently disabled'}, status=503)
+        if setting.is_maintenance_mode:
+            return JsonResponse({'error': 'الأداة في وضع الصيانة حالياً / Tool is under maintenance'}, status=503)
+
+    pricing = LipSyncModelPricing.objects.filter(is_active=True).first()
+    cost = pricing.cost_per_generation if pricing else Decimal('4.0000')
+    allow_premium = (pricing.allowed_wallet in ('premium', 'both')) if pricing else True
 
     try:
         deduction = WalletService.validate_and_charge(
             user_id=str(request.user.id),
             cost=cost,
-            tool_name='lipsync'
+            tool_name='lipsync',
+            allow_premium=allow_premium
         )
     except InsufficientCreditsError as e:
         return JsonResponse({'error': str(e)}, status=402)

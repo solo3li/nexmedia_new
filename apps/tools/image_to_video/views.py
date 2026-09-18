@@ -29,14 +29,27 @@ def image_to_video_generate_view(request):
     if not image_file:
         return JsonResponse({'error': 'الصورة مطلوبة / Image file is required'}, status=400)
 
-    # Cost calculation: 5.0 base credits
-    cost = Decimal('5.0000')
+    from apps.tools.image_to_video.models import ImageToVideoSetting, ImageToVideoModelPricing
+
+    setting = ImageToVideoSetting.objects.first()
+    if setting:
+        if not setting.is_active:
+            return JsonResponse({'error': 'الأداة معطلة حالياً من قبل الإدارة / Tool is currently disabled'}, status=503)
+        if setting.is_maintenance_mode:
+            return JsonResponse({'error': 'الأداة في وضع الصيانة حالياً / Tool is under maintenance'}, status=503)
+        if image_file.size > setting.max_image_size_mb * 1024 * 1024:
+            return JsonResponse({'error': f'حجم الصورة يتجاوز الحد المسموح ({setting.max_image_size_mb} MB)'}, status=400)
+
+    pricing = ImageToVideoModelPricing.objects.filter(is_active=True).first()
+    cost = pricing.fixed_cost_720p if pricing else Decimal('5.0000')
+    allow_premium = (pricing.allowed_wallet in ('premium', 'both')) if pricing else True
 
     try:
         deduction = WalletService.validate_and_charge(
             user_id=str(request.user.id),
             cost=cost,
-            tool_name='image_to_video'
+            tool_name='image_to_video',
+            allow_premium=allow_premium
         )
     except InsufficientCreditsError as e:
         return JsonResponse({'error': str(e)}, status=402)

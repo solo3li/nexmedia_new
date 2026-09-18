@@ -27,14 +27,25 @@ def motion_control_generate_view(request):
     if not image_file or not motion_video_file:
         return JsonResponse({'error': 'الصورة وفيديو الحركة مطلوبان / Image and motion video are required'}, status=400)
 
-    # Cost: 10.0 credits flat rate
-    cost = Decimal('10.0000')
+    from apps.tools.motion_control.models import MotionControlSetting, MotionControlModelPricing
+
+    setting = MotionControlSetting.objects.first()
+    if setting:
+        if not setting.is_active:
+            return JsonResponse({'error': 'الأداة معطلة حالياً من قبل الإدارة / Tool is currently disabled'}, status=503)
+        if setting.is_maintenance_mode:
+            return JsonResponse({'error': 'الأداة في وضع الصيانة حالياً / Tool is under maintenance'}, status=503)
+
+    pricing = MotionControlModelPricing.objects.filter(is_active=True).first()
+    cost = pricing.cost_per_generation if pricing else Decimal('10.0000')
+    allow_premium = (pricing.allowed_wallet in ('premium', 'both')) if pricing else True
 
     try:
         deduction = WalletService.validate_and_charge(
             user_id=str(request.user.id),
             cost=cost,
-            tool_name='motion_control'
+            tool_name='motion_control',
+            allow_premium=allow_premium
         )
     except InsufficientCreditsError as e:
         return JsonResponse({'error': str(e)}, status=402)

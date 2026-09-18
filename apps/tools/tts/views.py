@@ -29,12 +29,20 @@ def tts_workspace_view(request):
         'tool_title_en': 'Text to Speech',
     })
 
+from apps.tools.tts.models import TtsGeneration, TtsSetting, TtsModelPricing
+
 @login_required
 def tts_estimate_view(request):
     text = request.GET.get('text', '')
-    # 0.001 credit per character (minimum 0.1 credit)
+    quality = request.GET.get('quality', 'standard').lower()
+    pricing = TtsModelPricing.objects.filter(quality_level=quality, is_active=True).first() or TtsModelPricing.objects.filter(is_active=True).first()
     char_count = len(text)
-    cost = max(Decimal(str(char_count)) * Decimal('0.001'), Decimal('0.1000'))
+    if pricing and pricing.billing_type == 'per_char':
+        cost = max(Decimal(str(char_count)) * pricing.cost_per_char, pricing.fixed_cost)
+    elif pricing:
+        cost = pricing.fixed_cost
+    else:
+        cost = max(Decimal(str(char_count)) * Decimal('0.001'), Decimal('0.1000'))
     return JsonResponse({'cost': float(cost), 'characters': char_count})
 
 @login_required
@@ -47,19 +55,39 @@ def tts_generate_view(request):
 
     text = data.get('text', '').strip()
     voice_name = data.get('voice_name', 'صبرينة')
-    quality = data.get('quality', 'Standard')
+    quality = data.get('quality', 'standard')
 
     if not text:
         return JsonResponse({'error': 'النص مطلوب / Text is required'}, status=400)
 
-    # Cost calculation: 0.001 per char, min 0.1
-    cost = max(Decimal(str(len(text))) * Decimal('0.001'), Decimal('0.1000'))
+    # Dynamic Tool Settings Validation
+    setting = TtsSetting.objects.first()
+    if setting:
+        if not setting.is_active:
+            return JsonResponse({'error': 'الأداة معطلة حالياً من قبل الإدارة / Tool is currently disabled'}, status=503)
+        if setting.is_maintenance_mode:
+            return JsonResponse({'error': 'الأداة في وضع الصيانة حالياً / Tool is under maintenance'}, status=503)
+        if len(text) > setting.max_text_length:
+            return JsonResponse({'error': f'تجاوز النص الحد الأقصى المسموح به ({setting.max_text_length} حرف) / Text exceeds max length'}, status=400)
+
+    # Dynamic Model Pricing
+    pricing = TtsModelPricing.objects.filter(quality_level=quality.lower(), is_active=True).first() or TtsModelPricing.objects.filter(is_active=True).first()
+    if pricing:
+        if pricing.billing_type == 'per_char':
+            cost = max(Decimal(str(len(text))) * pricing.cost_per_char, pricing.fixed_cost)
+        else:
+            cost = pricing.fixed_cost
+        allow_premium = (pricing.allowed_wallet in ('premium', 'both'))
+    else:
+        cost = max(Decimal(str(len(text))) * Decimal('0.001'), Decimal('0.1000'))
+        allow_premium = True
 
     try:
         deduction = WalletService.validate_and_charge(
             user_id=str(request.user.id),
             cost=cost,
-            tool_name='tts'
+            tool_name='tts',
+            allow_premium=allow_premium
         )
     except InsufficientCreditsError as e:
         return JsonResponse({'error': str(e)}, status=402)
