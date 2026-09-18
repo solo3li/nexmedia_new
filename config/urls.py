@@ -7,7 +7,8 @@ from apps.core import views as core_views
 inngest_url_pattern = inngest.django.serve(
     inngest_client,
     get_all_inngest_functions(),
-    serve_path="/api/inngest"
+    serve_path="/api/inngest",
+    enable_unauthed_sync=True
 )
 
 urlpatterns = [
