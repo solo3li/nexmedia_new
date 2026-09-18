@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}استوديو توليد الصور (Image AI) — نكسميديا{% else %}Text to Image Studio — NexMedia{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8" x-data="{ prompt: '', aspectRatio: '1:1', isGenerating: false }">
+    <div>
+        <h1 class="text-xl font-extrabold text-gray-900 flex items-center gap-2.5">
+            <span>🎨</span>
+            <span>{% if DIR == 'rtl' %}{{ tool_title_ar }}{% else %}{{ tool_title_en }}{% endif %}</span>
+        </h1>
+        <p class="text-xs text-gray-400 mt-1">
+            {% if DIR == 'rtl' %}ولد صوراً فائقة الجودة بدقة 4K وتفاصيل سينمائية عبر نموذج Grok Imagine{% else %}Generate high-fidelity concept art, photorealistic portraits, and marketing visuals.{% endif %}
+        </p>
+    </div>
+
+    <div class="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm space-y-5">
+        <div>
+            <label class="block text-xs font-bold text-gray-700 mb-2">{% if DIR == 'rtl' %}الوصف الدقيق للصورة (Prompt){% else %}Prompt{% endif %}</label>
+            <textarea x-model="prompt" rows="3"
+                      placeholder="{% if DIR == 'rtl' %}مثال: بورتريه سينمائي لشخص بملابس تراثية عربية وإضاءة استوديو دافئة 8k photorealistic...{% else %}e.g. Ultra-detailed studio portrait of an astronaut with glowing helmet reflections...{% endif %}"
+                      class="w-full p-4 rounded-2xl border border-gray-100 bg-gray-50/50 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">{% if DIR == 'rtl' %}نسبة الأبعاد{% else %}Aspect Ratio{% endif %}</label>
+                <select x-model="aspectRatio" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs">
+                    <option value="1:1">1:1 Square (مربع)</option>
+                    <option value="16:9">16:9 Landscape (أفقي)</option>
+                    <option value="9:16">9:16 Portrait (عمودي / ستوري)</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">{% if DIR == 'rtl' %}النموذج{% else %}Model{% endif %}</label>
+                <select class="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-xs">
+                    <option value="grok-imagine">Grok Imagine (CrunAI)</option>
+                </select>
+            </div>
+        </div>
+
+        <button @click="generateImage()" :disabled="isGenerating || !prompt.trim()"
+                class="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-extrabold text-sm shadow-md shadow-emerald-500/25 transition-all">
+            <span x-show="!isGenerating">⚡ {% if DIR == 'rtl' %}توليد الصورة (2.0 رصيد - طابور t2i_queue){% else %}Generate Image (2.0 Credits - t2i_queue){% endif %}</span>
+            <span x-show="isGenerating">⏳ {% if DIR == 'rtl' %}جارِ المعالجة في Inngest...{% else %}Processing in Inngest...{% endif %}</span>
+        </button>
+    </div>
+
+    <!-- History -->
+    <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+        <h3 class="text-xs font-extrabold text-gray-900 uppercase tracking-wider mb-4">{% if DIR == 'rtl' %}معرض الصور الأخير{% else %}Recent Generated Images{% endif %}</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {% for item in history %}
+                <div class="p-3 rounded-2xl bg-gray-50 border border-gray-100 space-y-2">
+                    <div class="aspect-square bg-gray-200 rounded-xl flex items-center justify-center text-gray-400 overflow-hidden">
+                        {% if item.result_url %}
+                            <img src="{{ item.result_url }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <span>🖼️</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-[11px] font-bold text-gray-700 truncate">{{ item.prompt }}</p>
+                </div>
+            {% empty %}
+                <p class="text-xs text-gray-400 col-span-4 text-center py-4">{% if DIR == 'rtl' %}لا توجد صور سابقة{% else %}No generated images yet{% endif %}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    async function generateImage() {
+        const prompt = document.querySelector('[x-model="prompt"]').value;
+        const res = await fetch("{% url 'text_to_image_generate' %}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+            body: JSON.stringify({ prompt: prompt, aspect_ratio: '1:1' })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert("{% if DIR == 'rtl' %}تم إرسال مهمة الصورة إلى طابور Inngest بنجاح!{% else %}Image task enqueued!{% endif %}");
+            window.location.reload();
+        } else {
+            alert(data.error || 'Error generating image');
+        }
+    }
+</script>
+{% endblock %}

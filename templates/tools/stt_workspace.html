@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}استوديو التفريغ الصوتي (STT) — نكسميديا{% else %}Voice to Text Studio — NexMedia{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8" x-data="{ isUploading: false, resultText: '' }">
+    <div>
+        <h1 class="text-xl font-extrabold text-gray-900 flex items-center gap-2.5">
+            <span>📚</span>
+            <span>{% if DIR == 'rtl' %}{{ tool_title_ar }}{% else %}{{ tool_title_en }}{% endif %}</span>
+        </h1>
+        <p class="text-xs text-gray-400 mt-1">
+            {% if DIR == 'rtl' %}حوّل التسجيلات والملفات الصوتية إلى نصوص دقيقة بنقرة واحدة باستخدام Whisper AI{% else %}Transcribe audio and video files into high-accuracy editable text.{% endif %}
+        </p>
+    </div>
+
+    <div class="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm space-y-6">
+        <form method="POST" action="{% url 'stt_transcribe' %}" enctype="multipart/form-data" @submit="isUploading = true" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-2">
+                    {% if DIR == 'rtl' %}اختر ملف الصوت (MP3, WAV, M4A){% else %}Select Audio File{% endif %}
+                </label>
+                <input type="file" name="audio" accept="audio/*" required
+                       class="w-full p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 text-xs">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">{% if DIR == 'rtl' %}اللغة{% else %}Language{% endif %}</label>
+                    <select name="language" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-xs">
+                        <option value="auto">Auto Detect / كشف تلقائي</option>
+                        <option value="ar">العربية (Arabic)</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <div class="flex items-center pt-5">
+                    <label class="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer">
+                        <input type="checkbox" name="translate" value="true" class="rounded text-emerald-600">
+                        <span>{% if DIR == 'rtl' %}ترجمة إلى الإنجليزية مباشرة{% else %}Translate to English{% endif %}</span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" :disabled="isUploading"
+                    class="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm shadow-md shadow-emerald-500/25 transition-all">
+                <span x-show="!isUploading">⚡ {% if DIR == 'rtl' %}بدء التفريغ الصوتي (1.0 رصيد){% else %}Start Transcription (1.0 Credit){% endif %}</span>
+                <span x-show="isUploading">⏳ {% if DIR == 'rtl' %}جارِ الرفع والمعالجة...{% else %}Uploading & Processing...{% endif %}</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- History -->
+    <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+        <h3 class="text-xs font-extrabold text-gray-900 uppercase tracking-wider mb-4">
+            {% if DIR == 'rtl' %}سجل التفريغ السابق{% else %}Recent Transcriptions{% endif %}
+        </h3>
+        <div class="space-y-3">
+            {% for item in history %}
+                <div class="p-4 rounded-2xl bg-gray-50/70 border border-gray-100 space-y-2">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-bold text-gray-700">{{ item.created_at|date:"M d, H:i" }}</span>
+                        <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-700">{{ item.status }}</span>
+                    </div>
+                    <p class="text-xs text-gray-800 leading-relaxed">{{ item.result_text|default:"(Processing in Inngest...)" }}</p>
+                </div>
+            {% empty %}
+                <p class="text-xs text-gray-400 text-center py-4">{% if DIR == 'rtl' %}لا يوجد سجل سابق{% else %}No transcription history{% endif %}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}تسجيل الدخول — نكسميديا{% else %}Sign In — NexMedia{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto my-12 p-8 rounded-3xl bg-white border border-gray-100 shadow-sm">
+    <div class="text-center mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-2xl mx-auto mb-3">
+            🔐
+        </div>
+        <h2 class="text-xl font-extrabold text-gray-900">
+            {% if DIR == 'rtl' %}تسجيل الدخول{% else %}Welcome Back{% endif %}
+        </h2>
+        <p class="text-xs text-gray-400 mt-1">
+            {% if DIR == 'rtl' %}أدخل بيانات حسابك للمتابعة{% else %}Enter your credentials to continue{% endif %}
+        </p>
+    </div>
+
+    <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">
+                {% if DIR == 'rtl' %}اسم المستخدم أو البريد الإلكتروني{% else %}Username or Email{% endif %}
+            </label>
+            {{ form.username }}
+        </div>
+        <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">
+                {% if DIR == 'rtl' %}كلمة المرور{% else %}Password{% endif %}
+            </label>
+            {{ form.password }}
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm shadow-md shadow-emerald-500/25 transition-all">
+            {% if DIR == 'rtl' %}دخول{% else %}Sign In{% endif %}
+        </button>
+    </form>
+
+    <div class="text-center mt-6 pt-6 border-t border-gray-50">
+        <p class="text-xs text-gray-500">
+            {% if DIR == 'rtl' %}ليس لديك حساب؟{% else %}Don't have an account?{% endif %}
+            <a href="{% url 'register' %}" class="text-emerald-600 font-bold hover:underline">
+                {% if DIR == 'rtl' %}إنشاء حساب جديد{% else %}Sign Up{% endif %}
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

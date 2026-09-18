@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}المدونة وأحدث مقالات الذكاء الاصطناعي — نكسميديا{% else %}Blog & AI Insights — NexMedia{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-8 my-6">
+    <div>
+        <h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">
+            {% if DIR == 'rtl' %}المدونة وأحدث الأخبار{% else %}NexMedia Blog & Articles{% endif %}
+        </h1>
+        <p class="text-xs text-gray-400 mt-1">
+            {% if DIR == 'rtl' %}تعرف على أحدث التطورات في نماذج الذكاء الاصطناعي وصناعة المحتوى{% else %}Discover the latest advances in generative AI, video diffusion, and voice synthesis.{% endif %}
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% for post in posts %}
+            <article class="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                <div class="space-y-3">
+                    <span class="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
+                        {{ post.category }}
+                    </span>
+                    <h2 class="text-base font-extrabold text-gray-900 leading-snug">
+                        <a href="{% url 'blog_detail' post.slug %}" class="hover:text-emerald-600 transition-colors">
+                            {% if DIR == 'rtl' %}{{ post.title_ar }}{% else %}{{ post.title_en }}{% endif %}
+                        </a>
+                    </h2>
+                    <p class="text-xs text-gray-500 leading-relaxed line-clamp-3">
+                        {% if DIR == 'rtl' %}{{ post.content_ar|striptags|truncatewords:30 }}{% else %}{{ post.content_en|striptags|truncatewords:30 }}{% endif %}
+                    </p>
+                </div>
+
+                <div class="pt-4 mt-4 border-t border-gray-50 flex items-center justify-between text-xs">
+                    <span class="text-gray-400">{{ post.created_at|date:"M d, Y" }}</span>
+                    <a href="{% url 'blog_detail' post.slug %}" class="font-bold text-emerald-600 hover:underline">
+                        {% if DIR == 'rtl' %}قراءة المقال{% else %}Read More{% endif %} &rarr;
+                    </a>
+                </div>
+            </article>
+        {% empty %}
+            <p class="text-xs text-gray-400 col-span-2 text-center py-12">
+                {% if DIR == 'rtl' %}لا توجد مقالات منشورة حالياً{% else %}No published blog posts yet{% endif %}
+            </p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,498 @@
+[
+  {
+    "id": "style-1eabeb23",
+    "Name": "معلق صوتي",
+    "Value": "معلق صوتي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 0
+  },
+  {
+    "id": "style-0f3cced5",
+    "Name": "مذيع أخبار",
+    "Value": "إخباري",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 1
+  },
+  {
+    "id": "style-86e3dd27",
+    "Name": "راوي",
+    "Value": "راوي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 2
+  },
+  {
+    "id": "style-21629063",
+    "Name": "وثائقي",
+    "Value": "وثائقي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 3
+  },
+  {
+    "id": "style-0795e227",
+    "Name": "رسمي / للشركات",
+    "Value": "رسمي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 4
+  },
+  {
+    "id": "style-52f1ffba",
+    "Name": "شروحات وتعليم",
+    "Value": "تعليمي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 5
+  },
+  {
+    "id": "style-0b916f03",
+    "Name": "رد آلي",
+    "Value": "رد آلي (IVR)",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 6
+  },
+  {
+    "id": "style-ca4bf96f",
+    "Name": "إعلان تجاري",
+    "Value": "إعلاني",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 7
+  },
+  {
+    "id": "style-3ba3aea5",
+    "Name": "إعلان فاخر",
+    "Value": "إعلان فخم",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 8
+  },
+  {
+    "id": "style-88eed608",
+    "Name": "تسويق عقاري",
+    "Value": "إعلان عقاري",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 9
+  },
+  {
+    "id": "style-7c820109",
+    "Name": "إعلاني",
+    "Value": "اعلاني",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 10
+  },
+  {
+    "id": "style-a6e3595f",
+    "Name": "موشن جرافيك",
+    "Value": "موشن جرافيك",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 11
+  },
+  {
+    "id": "style-9ff7355b",
+    "Name": "يوتيوبر",
+    "Value": "يوتيوبر",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 12
+  },
+  {
+    "id": "style-6cf5845f",
+    "Name": "ريلز",
+    "Value": "ترند تيك توك",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 13
+  },
+  {
+    "id": "style-fb3fe08e",
+    "Name": "ملخصات أفلام",
+    "Value": "ملخصات أفلام",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 14
+  },
+  {
+    "id": "style-ed4d59d2",
+    "Name": "بودكاست",
+    "Value": "بودكاست",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 15
+  },
+  {
+    "id": "style-e6dd2b58",
+    "Name": "ستريمر",
+    "Value": "ستريمر",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 16
+  },
+  {
+    "id": "style-83262a8b",
+    "Name": "تقني",
+    "Value": "تقني",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 17
+  },
+  {
+    "id": "style-d2d8d7b5",
+    "Name": "قصص",
+    "Value": "قصصي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 18
+  },
+  {
+    "id": "style-062d7286",
+    "Name": "رعب وغموض",
+    "Value": "رعب وغموض",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 19
+  },
+  {
+    "id": "style-42a5b03d",
+    "Name": "تشويقي",
+    "Value": "تشويقي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 20
+  },
+  {
+    "id": "style-2b1d1eab",
+    "Name": "كتاب صوتي",
+    "Value": "كتاب صوتي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 21
+  },
+  {
+    "id": "style-e9b31fea",
+    "Name": "معلق رياضي",
+    "Value": "مذيع رياضي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 22
+  },
+  {
+    "id": "style-494725e1",
+    "Name": "شعر وخواطر",
+    "Value": "إلقاء شعري",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 23
+  },
+  {
+    "id": "style-3fed06bf",
+    "Name": "ديني",
+    "Value": "ديني",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 24
+  },
+  {
+    "id": "style-dee3c444",
+    "Name": "ترتيل وتجويد",
+    "Value": "تجويد",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 25
+  },
+  {
+    "id": "style-322f9ba9",
+    "Name": "تقمص طفل",
+    "Value": "صوت طفل",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 26
+  },
+  {
+    "id": "style-b2c56bc6",
+    "Name": "تقمص عجوز",
+    "Value": "صوت عجوز",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 27
+  },
+  {
+    "id": "style-2adf792c",
+    "Name": "همس",
+    "Value": "همس",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 28
+  },
+  {
+    "id": "style-c11986f2",
+    "Name": "صراخ",
+    "Value": "صراخ",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 29
+  },
+  {
+    "id": "style-26d08d90",
+    "Name": "تحدث بسرعة",
+    "Value": "تحدث سريع",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 30
+  },
+  {
+    "id": "style-13ae90cd",
+    "Name": "تحدث ببطء",
+    "Value": "تحدث بطيء",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 31
+  },
+  {
+    "id": "style-323d2ccd",
+    "Name": "ضحك",
+    "Value": "[ضحك]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 32
+  },
+  {
+    "id": "style-a1e95dd0",
+    "Name": "ضحكة قصيرة",
+    "Value": "[ضحكة مكتومة]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 33
+  },
+  {
+    "id": "style-0d1a93db",
+    "Name": "تنهيدة",
+    "Value": "[تنهيدة]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 34
+  },
+  {
+    "id": "style-de93fd92",
+    "Name": "شهيق",
+    "Value": "[نفس عميق]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 35
+  },
+  {
+    "id": "style-8cd20c5b",
+    "Name": "بكاء",
+    "Value": "[بكاء]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 36
+  },
+  {
+    "id": "style-2a2bba22",
+    "Name": "شهقة",
+    "Value": "[شهقة]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 37
+  },
+  {
+    "id": "style-43fa4044",
+    "Name": "همهمة",
+    "Value": "[همهمة]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 38
+  },
+  {
+    "id": "style-73e6369f",
+    "Name": "تنحنح",
+    "Value": "[تنحنح]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 39
+  },
+  {
+    "id": "style-6584224a",
+    "Name": "سعال",
+    "Value": "[سعال]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 40
+  },
+  {
+    "id": "style-50bcf6e6",
+    "Name": "تثاؤب",
+    "Value": "[تثاؤب]",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 41
+  },
+  {
+    "id": "style-13de5592",
+    "Name": "راب",
+    "Value": "راب",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 43
+  },
+  {
+    "id": "style-14492a96",
+    "Name": "مهرجانات",
+    "Value": "مهرجانات",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 44
+  },
+  {
+    "id": "style-3276c706",
+    "Name": "طرب",
+    "Value": "طرب",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 45
+  },
+  {
+    "id": "style-136d6bca",
+    "Name": "شعبي",
+    "Value": "شعبي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 46
+  },
+  {
+    "id": "style-63a9fda2",
+    "Name": "بوب عربي",
+    "Value": "بوب عربي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 47
+  },
+  {
+    "id": "style-92569ac4",
+    "Name": "روك عربي",
+    "Value": "روك عربي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 48
+  },
+  {
+    "id": "style-be93be8d",
+    "Name": "كلاسيكي",
+    "Value": "كلاسيكي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 49
+  },
+  {
+    "id": "style-b7fe02bf",
+    "Name": "أوبرا",
+    "Value": "أوبرا",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 50
+  },
+  {
+    "id": "style-7eac7493",
+    "Name": "إنشاد ديني",
+    "Value": "إنشاد ديني",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 51
+  },
+  {
+    "id": "style-ec9e294b",
+    "Name": "شيلات",
+    "Value": "شيلات",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 52
+  },
+  {
+    "id": "style-205eebb8",
+    "Name": "موال",
+    "Value": "موال",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 53
+  },
+  {
+    "id": "style-6c3442e0",
+    "Name": "جاز عربي",
+    "Value": "جاز عربي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 54
+  },
+  {
+    "id": "style-1217c479",
+    "Name": "فرانكو بوب",
+    "Value": "فرانكو بوب",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 55
+  },
+  {
+    "id": "style-d04c9e74",
+    "Name": "هيب هوب عربي",
+    "Value": "هيب هوب عربي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 56
+  },
+  {
+    "id": "style-b68b1dba",
+    "Name": "لوفي",
+    "Value": "لوفي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 57
+  },
+  {
+    "id": "style-90ba8487",
+    "Name": "أر أند بي عربي",
+    "Value": "أر أند بي عربي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 58
+  },
+  {
+    "id": "style-629d4dc5",
+    "Name": "عراقي",
+    "Value": "عراقي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 59
+  },
+  {
+    "id": "style-3edfe2d2",
+    "Name": "خليجي",
+    "Value": "خليجي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 60
+  },
+  {
+    "id": "style-5718beef",
+    "Name": "راي",
+    "Value": "راي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 61
+  },
+  {
+    "id": "style-24bb4b36",
+    "Name": "ميكس شرقي وغربي",
+    "Value": "ميكس شرقي وغربي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 62
+  }
+]

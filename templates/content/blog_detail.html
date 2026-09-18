@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}{{ post.title_ar }}{% else %}{{ post.title_en }}{% endif %} — NexMedia
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto my-8 p-8 rounded-3xl bg-white border border-gray-100 shadow-sm space-y-6">
+    <a href="{% url 'blog_list' %}" class="inline-flex items-center gap-1.5 text-xs font-bold text-gray-400 hover:text-gray-700">
+        &larr; {% if DIR == 'rtl' %}العودة للمدونة{% else %}Back to Blog{% endif %}
+    </a>
+
+    <div class="space-y-3">
+        <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">
+            {{ post.category }}
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight">
+            {% if DIR == 'rtl' %}{{ post.title_ar }}{% else %}{{ post.title_en }}{% endif %}
+        </h1>
+        <p class="text-xs text-gray-400">{{ post.created_at|date:"F d, Y" }}</p>
+    </div>
+
+    <div class="pt-6 border-t border-gray-100 prose prose-sm max-w-none text-gray-700 leading-relaxed space-y-4">
+        {% if DIR == 'rtl' %}
+            {{ post.content_ar|safe }}
+        {% else %}
+            {{ post.content_en|safe }}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

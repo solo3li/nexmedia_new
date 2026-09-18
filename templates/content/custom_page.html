@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}{{ page.title_ar }}{% else %}{{ page.title_en }}{% endif %} — NexMedia
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto my-8 p-8 rounded-3xl bg-white border border-gray-100 shadow-sm space-y-6">
+    <h1 class="text-2xl font-extrabold text-gray-900">
+        {% if DIR == 'rtl' %}{{ page.title_ar }}{% else %}{{ page.title_en }}{% endif %}
+    </h1>
+    <div class="pt-6 border-t border-gray-100 prose prose-sm text-gray-700 leading-relaxed">
+        {% if DIR == 'rtl' %}
+            {{ page.content_ar|safe }}
+        {% else %}
+            {{ page.content_en|safe }}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

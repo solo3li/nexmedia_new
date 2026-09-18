@@ -1,0 +1,250 @@
+[
+  {
+    "id": "emotion-ee7d2393",
+    "Name": "سعيد",
+    "Value": "سعيد",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 0
+  },
+  {
+    "id": "emotion-f526caf6",
+    "Name": "حزين",
+    "Value": "حزين",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 1
+  },
+  {
+    "id": "emotion-5a9cf771",
+    "Name": "متحمس",
+    "Value": "متحمس",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 2
+  },
+  {
+    "id": "emotion-8673bb0e",
+    "Name": "غاضب",
+    "Value": "غاضب",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 3
+  },
+  {
+    "id": "emotion-9af76462",
+    "Name": "خائف",
+    "Value": "خائف",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 4
+  },
+  {
+    "id": "emotion-a23e0c52",
+    "Name": "ساخر",
+    "Value": "ساخر",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 5
+  },
+  {
+    "id": "emotion-fe8f4ce2",
+    "Name": "متفاجئ",
+    "Value": "متفاجئ",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 6
+  },
+  {
+    "id": "emotion-6df0a0bf",
+    "Name": "قلق",
+    "Value": "قلق",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 8
+  },
+  {
+    "id": "emotion-0765e890",
+    "Name": "واثق",
+    "Value": "واثق",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 9
+  },
+  {
+    "id": "emotion-145dc9d0",
+    "Name": "هادئ",
+    "Value": "هادئ",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 10
+  },
+  {
+    "id": "emotion-1fcfb590",
+    "Name": "جاد",
+    "Value": "جاد",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 11
+  },
+  {
+    "id": "emotion-6af38b4c",
+    "Name": "مستعجل",
+    "Value": "مستعجل",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 12
+  },
+  {
+    "id": "emotion-ac122933",
+    "Name": "حنون",
+    "Value": "حنون",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 13
+  },
+  {
+    "id": "emotion-16a62bf5",
+    "Name": "رومانسي",
+    "Value": "رومانسي",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 14
+  },
+  {
+    "id": "emotion-c026d380",
+    "Name": "مرح",
+    "Value": "مرح",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 15
+  },
+  {
+    "id": "emotion-1d75c191",
+    "Name": "متفائل",
+    "Value": "متفائل",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 16
+  },
+  {
+    "id": "emotion-3264b823",
+    "Name": "متشائم",
+    "Value": "متشائم",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 17
+  },
+  {
+    "id": "emotion-cef73f0e",
+    "Name": "مرتبك",
+    "Value": "مرتبك",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 18
+  },
+  {
+    "id": "emotion-a9473df7",
+    "Name": "غيور",
+    "Value": "غيور",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 19
+  },
+  {
+    "id": "emotion-fc7604d2",
+    "Name": "نادم",
+    "Value": "نادم",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 20
+  },
+  {
+    "id": "emotion-ddf67e20",
+    "Name": "فخور",
+    "Value": "فخور",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 21
+  },
+  {
+    "id": "emotion-8341308b",
+    "Name": "محبط",
+    "Value": "محبط",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 22
+  },
+  {
+    "id": "emotion-fbc7a6f0",
+    "Name": "مصدوم",
+    "Value": "مصدوم",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 23
+  },
+  {
+    "id": "emotion-3ef441ec",
+    "Name": "متعب",
+    "Value": "متعب",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 24
+  },
+  {
+    "id": "emotion-854ed211",
+    "Name": "ملان",
+    "Value": "ملان",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 25
+  },
+  {
+    "id": "emotion-f90afdf8",
+    "Name": "متمرد",
+    "Value": "متمرد",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 26
+  },
+  {
+    "id": "emotion-5236e34a",
+    "Name": "بريء",
+    "Value": "بريء",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 27
+  },
+  {
+    "id": "emotion-8e78aeb5",
+    "Name": "شرير",
+    "Value": "شرير",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 28
+  },
+  {
+    "id": "emotion-95e5f8d2",
+    "Name": "غامض",
+    "Value": "غامض",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 29
+  },
+  {
+    "id": "emotion-6ea5fb57",
+    "Name": "متحسر",
+    "Value": "متحسر",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 30
+  },
+  {
+    "id": "emotion-0bb92b49",
+    "Name": "متوسل",
+    "Value": "متوسل",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 31
+  }
+]

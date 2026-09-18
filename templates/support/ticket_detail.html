@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Ticket #{{ ticket.id|stringformat:".8s" }} — NexMedia
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-6 my-6">
+
+    <div class="flex items-center justify-between">
+        <a href="{% url 'ticket_list' %}" class="text-xs font-bold text-gray-400 hover:text-gray-700">
+            &larr; {% if DIR == 'rtl' %}العودة للتذاكر{% else %}Back to Tickets{% endif %}
+        </a>
+        <span class="px-3 py-1 rounded-full text-[10px] font-bold {% if ticket.status == 'open' %}bg-emerald-50 text-emerald-700 border border-emerald-200{% else %}bg-gray-100 text-gray-600{% endif %}">
+            {{ ticket.status|upper }}
+        </span>
+    </div>
+
+    <div class="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm">
+        <h1 class="text-xl font-extrabold text-gray-900">{{ ticket.subject }}</h1>
+        <p class="text-xs text-gray-400 mt-1">Ticket #{{ ticket.id }} · {{ ticket.created_at|date:"M d, Y H:i" }}</p>
+    </div>
+
+    <!-- Messages Thread -->
+    <div class="space-y-4">
+        {% for msg in ticket.messages.all %}
+            <div class="p-5 rounded-3xl border {% if msg.is_admin %}bg-emerald-50/40 border-emerald-100 mr-8{% else %}bg-white border-gray-100 ml-8{% endif %} space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="font-bold {% if msg.is_admin %}text-emerald-700{% else %}text-gray-900{% endif %}">
+                        {{ msg.sender.username }} {% if msg.is_admin %}(Support Agent){% endif %}
+                    </span>
+                    <span class="text-gray-400 text-[10px]">{{ msg.created_at|date:"M d, H:i" }}</span>
+                </div>
+                <p class="text-xs text-gray-700 leading-relaxed">{{ msg.message }}</p>
+                {% if msg.attachment_url %}
+                    <div class="pt-2">
+                        <a href="{{ msg.attachment_url }}" target="_blank" class="text-xs text-emerald-600 font-bold hover:underline">
+                            📎 {% if DIR == 'rtl' %}عرض المرفق{% else %}View Attachment{% endif %} &rarr;
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Reply Box -->
+    <div class="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm">
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">{% if DIR == 'rtl' %}إرسال رد{% else %}Send Reply{% endif %}</label>
+                <textarea name="message" rows="3" required placeholder="{% if DIR == 'rtl' %}اكتب ردك هنا...{% else %}Type your message...{% endif %}"
+                          class="w-full p-4 rounded-xl border border-gray-200 text-xs focus:ring-2 focus:ring-emerald-500"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">{% if DIR == 'rtl' %}مرفق (اختياري){% else %}Attachment (Optional){% endif %}</label>
+                <input type="file" name="attachment" class="w-full text-xs text-gray-500">
+            </div>
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs shadow-md shadow-emerald-500/25">
+                {% if DIR == 'rtl' %}إرسال الرد{% else %}Reply{% endif %}
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

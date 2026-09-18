@@ -1,0 +1,82 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: nexmedia-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-nexmedia_db}
+      POSTGRES_USER: ${POSTGRES_USER:-nexmedia}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nexmedia_secret_password_123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - nexmedia_pgdata:/var/lib/postgresql/data
+    networks:
+      - nexmedia_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: nexmedia-redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD:-nexmedia_redis_password_123}
+    ports:
+      - "6379:6379"
+    volumes:
+      - nexmedia_redisdata:/data
+    networks:
+      - nexmedia_net
+
+  minio:
+    image: minio/minio:latest
+    container_name: nexmedia-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin123}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - nexmedia_miniodata:/data
+    networks:
+      - nexmedia_net
+
+  centrifugo:
+    image: centrifugo/centrifugo:latest
+    container_name: nexmedia-centrifugo
+    restart: unless-stopped
+    environment:
+      - CENTRIFUGO_HTTP_API_KEY=nexmedia_centrifugo_api_key_2026
+      - CENTRIFUGO_CLIENT_TOKEN_HMAC_SECRET_KEY=nexmedia_centrifugo_secret_token_hmac_key_2026
+      - CENTRIFUGO_CLIENT_ALLOWED_ORIGINS=*
+      - CENTRIFUGO_CLIENT_ANONYMOUS=true
+      - CENTRIFUGO_ADMIN_PASSWORD=admin_centrifugo_secret_password
+      - CENTRIFUGO_ADMIN_SECRET=admin_centrifugo_secret_admin_key
+      - CENTRIFUGO_ADMIN_ENABLED=true
+    command: centrifugo
+    ports:
+      - "8001:8000"
+    networks:
+      - nexmedia_net
+
+  inngest:
+    image: inngest/inngest:latest
+    container_name: nexmedia-inngest
+    restart: unless-stopped
+    command: inngest dev -u http://host.docker.internal:8000/api/inngest
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8288:8288"
+    networks:
+      - nexmedia_net
+
+networks:
+  nexmedia_net:
+    driver: bridge
+
+volumes:
+  nexmedia_pgdata:
+  nexmedia_redisdata:
+  nexmedia_miniodata:

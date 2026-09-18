@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}إتمام الدفع وتفعيل الخطة — نكسميديا{% else %}Checkout — NexMedia{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-8 my-8" x-data="{ selectedMethod: 'manual', currency: 'USD' }">
+
+    <div class="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm space-y-6">
+        <div>
+            <h1 class="text-xl font-extrabold text-gray-900">
+                {% if DIR == 'rtl' %}إتمام الاشتراك في الخطة{% else %}Complete Your Subscription{% endif %}
+            </h1>
+            <p class="text-xs text-gray-400 mt-1">
+                {% if DIR == 'rtl' %}اختر وسيلة الدفع المناسبة لتفعيل خطة {{ plan.name_ar }}{% else %}Select your payment method to activate {{ plan.name }}{% endif %}
+            </p>
+        </div>
+
+        <!-- Plan Summary Box -->
+        <div class="p-5 rounded-2xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between">
+            <div>
+                <p class="text-sm font-extrabold text-emerald-950">{{ plan.name }}</p>
+                <p class="text-xs text-emerald-700">⚡ {{ plan.standard_credits_grant|floatformat:0 }} Standard + 💎 {{ plan.premium_credits_grant|floatformat:0 }} Premium</p>
+            </div>
+            <div class="text-right">
+                <p class="text-xl font-black text-emerald-950">${{ plan.price_usd|floatformat:2 }}</p>
+                <p class="text-[10px] text-emerald-700 font-semibold">{{ plan.price_egp|floatformat:2 }} EGP</p>
+            </div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+
+            <!-- Method Selection -->
+            <div class="space-y-3">
+                <label class="block text-xs font-bold text-gray-700">{% if DIR == 'rtl' %}طريقة الدفع{% else %}Payment Gateway{% endif %}</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <label class="p-4 rounded-2xl border cursor-pointer flex flex-col items-center justify-center text-center gap-1.5 transition-all"
+                           :class="selectedMethod === 'manual' ? 'border-emerald-500 bg-emerald-50/30 ring-2 ring-emerald-500/20' : 'border-gray-100 hover:bg-gray-50'">
+                        <input type="radio" name="method" value="manual" x-model="selectedMethod" class="sr-only">
+                        <span class="text-xl">🏦</span>
+                        <span class="text-xs font-bold text-gray-800">{% if DIR == 'rtl' %}تحويل بنكي / محفظة{% else %}Manual Wallet{% endif %}</span>
+                    </label>
+
+                    <label class="p-4 rounded-2xl border cursor-pointer flex flex-col items-center justify-center text-center gap-1.5 transition-all"
+                           :class="selectedMethod === 'paymob' ? 'border-emerald-500 bg-emerald-50/30 ring-2 ring-emerald-500/20' : 'border-gray-100 hover:bg-gray-50'">
+                        <input type="radio" name="method" value="paymob" x-model="selectedMethod" class="sr-only">
+                        <span class="text-xl">💳</span>
+                        <span class="text-xs font-bold text-gray-800">Paymob (EGP)</span>
+                    </label>
+
+                    <label class="p-4 rounded-2xl border cursor-pointer flex flex-col items-center justify-center text-center gap-1.5 transition-all"
+                           :class="selectedMethod === 'paypal' ? 'border-emerald-500 bg-emerald-50/30 ring-2 ring-emerald-500/20' : 'border-gray-100 hover:bg-gray-50'">
+                        <input type="radio" name="method" value="paypal" x-model="selectedMethod" class="sr-only">
+                        <span class="text-xl">🅿️</span>
+                        <span class="text-xs font-bold text-gray-800">PayPal (USD)</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Manual Method Instructions & File Upload -->
+            <div x-show="selectedMethod === 'manual'" class="space-y-4 pt-4 border-t border-gray-100">
+                <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100 text-xs space-y-2">
+                    <p class="font-bold text-gray-800">{% if DIR == 'rtl' %}تعليمات الدفع والتحويل:{% else %}Payment Instructions:{% endif %}</p>
+                    <p class="text-gray-600 leading-relaxed">
+                        {% if DIR == 'rtl' %}
+                            قم بالتحويل إلى فودافون كاش أو إنستاباي، ثم ارفع صورة إيصال التحويل لتفعيل الخطة فوراً بعد مراجعة المشرف.
+                        {% else %}
+                            Please transfer to our designated bank account / mobile wallet and upload the receipt image below.
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-2">{% if DIR == 'rtl' %}صورة إيصال التحويل (Receipt File){% else %}Receipt Upload{% endif %}</label>
+                    <input type="file" name="receipt" accept="image/*,.pdf" class="w-full p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 text-xs">
+                </div>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm shadow-md shadow-emerald-500/25 transition-all">
+                {% if DIR == 'rtl' %}تأكيد ومتابعة الدفع{% else %}Confirm & Activate Plan{% endif %} &rarr;
+            </button>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

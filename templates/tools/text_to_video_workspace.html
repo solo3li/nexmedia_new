@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}استوديو تحويل النص إلى فيديو — نكسميديا{% else %}Text to Video Studio — NexMedia{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8" x-data="{ prompt: '', resolution: '720p', duration: 5, isGenerating: false }">
+    <div>
+        <h1 class="text-xl font-extrabold text-gray-900 flex items-center gap-2.5">
+            <span>🎬</span>
+            <span>{% if DIR == 'rtl' %}{{ tool_title_ar }}{% else %}{{ tool_title_en }}{% endif %}</span>
+        </h1>
+        <p class="text-xs text-gray-400 mt-1">
+            {% if DIR == 'rtl' %}أنشئ مقاطع فيديو سينمائية واقعية من النصوص فقط عبر Google Veo 3.1 Fast و Grok Imagine{% else %}Create cinematic videos directly from descriptive text prompts.{% endif %}
+        </p>
+    </div>
+
+    <div class="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm space-y-5">
+        <div>
+            <label class="block text-xs font-bold text-gray-700 mb-2">{% if DIR == 'rtl' %}الوصف السينمائي للفيديو (Prompt){% else %}Prompt{% endif %}</label>
+            <textarea x-model="prompt" rows="4"
+                      placeholder="{% if DIR == 'rtl' %}مثال: مشهد طائرة ورقية تحلق فوق شاطئ ذهبي وقت الغروب بحركة كاميرا بطيئة وجودة سينمائية...{% else %}e.g. A cinematic drone shot of a futuristic neon city in the rain, ultra-realistic...{% endif %}"
+                      class="w-full p-4 rounded-2xl border border-gray-100 bg-gray-50/50 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">{% if DIR == 'rtl' %}الدقة{% else %}Resolution{% endif %}</label>
+                <select x-model="resolution" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs">
+                    <option value="480p">480p SD (2.4 credits/s)</option>
+                    <option value="720p" selected>720p HD (4.5 credits/s)</option>
+                    <option value="1080p">1080p FHD (7.5 credits/s)</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">{% if DIR == 'rtl' %}المدة{% else %}Duration{% endif %}</label>
+                <select x-model="duration" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs">
+                    <option value="5">5 ثوانٍ / Seconds</option>
+                    <option value="10">10 ثوانٍ / Seconds</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">{% if DIR == 'rtl' %}النموذج{% else %}Model{% endif %}</label>
+                <select class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs">
+                    <option value="veo-3.1-fast">Google Veo 3.1 Fast</option>
+                    <option value="grok-imagine">Grok Imagine Video</option>
+                </select>
+            </div>
+        </div>
+
+        <button @click="generateVideo()" :disabled="isGenerating || !prompt.trim()"
+                class="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-extrabold text-sm shadow-md shadow-emerald-500/25 transition-all">
+            <span x-show="!isGenerating">⚡ {% if DIR == 'rtl' %}بدء توليد الفيديو (طابور t2v_queue){% else %}Generate Video (t2v_queue){% endif %}</span>
+            <span x-show="isGenerating">⏳ {% if DIR == 'rtl' %}جارِ الإرسال والمعالجة في Inngest...{% else %}Queued in Inngest...{% endif %}</span>
+        </button>
+    </div>
+
+    <!-- History -->
+    <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+        <h3 class="text-xs font-extrabold text-gray-900 uppercase tracking-wider mb-4">{% if DIR == 'rtl' %}سجل الفيديوهات الأخيرة{% else %}Recent Video Generations{% endif %}</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {% for item in history %}
+                <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-2">
+                    <p class="text-xs font-bold text-gray-800 truncate">{{ item.prompt }}</p>
+                    <div class="flex items-center justify-between text-[10px] text-gray-400">
+                        <span>{{ item.resolution }} · {{ item.duration_seconds }}s</span>
+                        <span class="px-2 py-0.5 rounded font-bold {% if item.status == 'completed' %}bg-emerald-100 text-emerald-700{% else %}bg-amber-100 text-amber-700{% endif %}">{{ item.status }}</span>
+                    </div>
+                    {% if item.result_url %}
+                        <a href="{{ item.result_url }}" target="_blank" class="block text-center py-2 rounded-xl bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-600">
+                            {% if DIR == 'rtl' %}تحميل / مشاهدة الفيديو{% else %}View Video{% endif %} &rarr;
+                        </a>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p class="text-xs text-gray-400 col-span-2 text-center py-4">{% if DIR == 'rtl' %}لا توجد فيديوهات سابقة{% else %}No video generations yet{% endif %}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    async function generateVideo() {
+        const prompt = document.querySelector('[x-model="prompt"]').value;
+        const res = await fetch("{% url 'text_to_video_generate' %}", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+            body: JSON.stringify({ prompt: prompt, resolution: '720p', duration: 5 })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert("{% if DIR == 'rtl' %}تم إرسال مهمة الفيديو إلى طابور Inngest بنجاح!{% else %}Video task enqueued successfully!{% endif %}");
+            window.location.reload();
+        } else {
+            alert(data.error || 'Error generating video');
+        }
+    }
+</script>
+{% endblock %}

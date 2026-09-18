@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="{{ DIR }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NexMedia AI — Creative AI Platform{% endblock %}</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Cairo', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: Plus Jakarta Sans (LTR) & Cairo (RTL) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
+
+    <!-- Centrifuge-JS for real-time WebSocket communication -->
+    <script src="https://cdn.jsdelivr.net/npm/centrifuge@5.2.2/dist/centrifuge.min.js"></script>
+
+    <style>
+        [x-cloak] { display: none !important; }
+        body {
+            font-family: {% if DIR == 'rtl' %}'Cairo'{% else %}'Plus Jakarta Sans'{% endif %}, sans-serif;
+            background-color: #f9fafb;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="text-gray-900 antialiased min-h-screen flex flex-col"
+      x-data="nexmediaGlobalState()"
+      x-init="initCentrifugo('{{ CENTRIFUGO_WS_URL }}', '{{ centrifugo_token }}', '{{ user_channel }}')">
+
+    <div class="flex flex-1 min-h-screen">
+        <!-- Sidebar -->
+        {% include "components/sidebar.html" %}
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+            <!-- Top Header -->
+            {% include "components/header.html" %}
+
+            <!-- Notification Messages Banner -->
+            {% if messages %}
+                <div class="px-8 pt-4">
+                    {% for message in messages %}
+                        <div class="p-4 rounded-2xl mb-3 text-sm font-medium flex items-center justify-between {% if message.tags == 'error' %}bg-rose-50 text-rose-700 border border-rose-100{% else %}bg-emerald-50 text-emerald-700 border border-emerald-100{% endif %}">
+                            <span>{{ message }}</span>
+                            <button @click="$el.parentElement.remove()" class="opacity-60 hover:opacity-100">✕</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Page Body -->
+            <main class="flex-1 px-6 sm:px-8 py-6">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Global Toast Container (Realtime Notifications via Centrifugo) -->
+    <div class="fixed bottom-6 {% if DIR == 'rtl' %}left-6{% else %}right-6{% endif %} z-50 flex flex-col gap-3 pointer-events-none" style="max-width: 400px;">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div class="pointer-events-auto p-4 rounded-2xl shadow-xl border bg-white flex items-start gap-3 transition-all duration-300 transform"
+                 :class="toast.type === 'error' ? 'border-rose-200' : 'border-emerald-200'">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
+                     :class="toast.type === 'error' ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'">
+                    <span x-text="toast.type === 'error' ? '!' : '✓'"></span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-bold text-sm text-gray-900" x-text="toast.title"></p>
+                    <p class="text-xs text-gray-600 mt-0.5" x-text="toast.message"></p>
+                    <template x-if="toast.resultUrl">
+                        <a :href="toast.resultUrl" target="_blank" class="inline-block mt-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 underline">
+                            {% if DIR == 'rtl' %}تحميل / عرض النتيجة{% else %}Download / View Result{% endif %} &rarr;
+                        </a>
+                    </template>
+                </div>
+                <button @click="removeToast(toast.id)" class="text-gray-400 hover:text-gray-600 text-xs">✕</button>
+            </div>
+        </template>
+    </div>
+
+    <!-- Global Scripts -->
+    <script>
+        function nexmediaGlobalState() {
+            return {
+                sidebarCollapsed: false,
+                standardCredits: {{ standard_credits|default:0 }},
+                premiumCredits: {{ premium_credits|default:0 }},
+                centrifugoConnected: false,
+                toasts: [],
+
+                initCentrifugo(wsUrl, token, channel) {
+                    if (!token || !channel) return;
+                    try {
+                        const centrifuge = new Centrifuge(wsUrl, { token: token });
+                        centrifuge.on('connected', () => {
+                            this.centrifugoConnected = true;
+                            console.log('Centrifugo connected to ' + wsUrl);
+                        });
+                        centrifuge.on('disconnected', () => {
+                            this.centrifugoConnected = false;
+                        });
+
+                        const sub = centrifuge.newSubscription(channel);
+                        sub.on('publication', (ctx) => {
+                            const data = ctx.data;
+                            if (data.type === 'WALLET_UPDATED') {
+                                this.standardCredits = data.payload.standard_credits;
+                                this.premiumCredits = data.payload.premium_credits;
+                                if (data.payload.refunded) {
+                                    this.addToast('تم استرجاع الرصيد / Credits Refunded', data.payload.reason, 'info');
+                                }
+                            } else if (data.type === 'GENERATION_COMPLETED') {
+                                this.addToast(
+                                    '{% if DIR == "rtl" %}اكتمل التوليد بنجاح!{% else %}Generation Completed!{% endif %}',
+                                    `Tool: ${data.payload.tool}`,
+                                    'success',
+                                    data.payload.result_url
+                                );
+                            } else if (data.type === 'GENERATION_FAILED') {
+                                this.addToast(
+                                    '{% if DIR == "rtl" %}فشل التوليد وتم استرجاع الرصيد{% else %}Generation Failed & Refunded{% endif %}',
+                                    data.payload.error,
+                                    'error'
+                                );
+                            }
+                        });
+                        sub.subscribe();
+                        centrifuge.connect();
+                    } catch (e) {
+                        console.warn('Centrifugo setup skipped:', e);
+                    }
+                },
+
+                addToast(title, message, type = 'success', resultUrl = null) {
+                    const id = Date.now();
+                    this.toasts.push({ id, title, message, type, resultUrl });
+                    setTimeout(() => { this.removeToast(id); }, 7000);
+                },
+
+                removeToast(id) {
+                    this.toasts = this.toasts.filter(t => t.id !== id);
+                }
+            };
+        }
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,185 @@
+<aside class="w-64 bg-white border-r border-gray-100 flex flex-col flex-shrink-0 transition-all duration-300 select-none"
+       :class="sidebarCollapsed ? 'w-20' : 'w-64'">
+
+    <!-- Logo & Collapse Toggle -->
+    <div class="h-20 flex items-center justify-between px-6 border-b border-gray-50">
+        <a href="{% url 'dashboard' %}" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-emerald-500/20">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+            </div>
+            <span class="font-extrabold text-xl tracking-tight text-gray-900" x-show="!sidebarCollapsed">NexMedia</span>
+        </a>
+        <button @click="sidebarCollapsed = !sidebarCollapsed" class="p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-50 text-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Workspace Badge -->
+    <div class="px-5 py-4" x-show="!sidebarCollapsed">
+        <div class="p-2.5 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-xs">
+                    ✦
+                </div>
+                <span class="text-xs font-bold text-gray-700">{% if DIR == 'rtl' %}منصة الإبداع الذكي{% else %}Creative Platform{% endif %}</span>
+            </div>
+            <span class="text-xs text-gray-400">▾</span>
+        </div>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="flex-1 overflow-y-auto px-4 py-2 space-y-6">
+
+        <!-- Main Menu -->
+        <div>
+            <p class="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2" x-show="!sidebarCollapsed">
+                {% if DIR == 'rtl' %}القائمة الرئيسية{% else %}Main Menu{% endif %}
+            </p>
+            <nav class="space-y-1">
+                <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold transition-all {% if request.resolver_match.url_name == 'dashboard' %}bg-emerald-500 text-white shadow-md shadow-emerald-500/25{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}الرئيسية{% else %}Home{% endif %}</span>
+                </a>
+
+                <a href="{% url 'tts_workspace' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold transition-all {% if 'tts' in request.path %}bg-emerald-50 text-emerald-700 font-bold{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}تحويل النص لصوت (TTS){% else %}Text to Speech{% endif %}</span>
+                </a>
+
+                <a href="{% url 'stt_workspace' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold transition-all {% if 'stt' in request.path %}bg-emerald-50 text-emerald-700 font-bold{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}تفريغ الصوت لنص (STT){% else %}Voice to Text{% endif %}</span>
+                </a>
+
+                <a href="{% url 'text_to_image_workspace' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold transition-all {% if 'text-to-image' in request.path %}bg-emerald-50 text-emerald-700 font-bold{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}توليد الصور (Image AI){% else %}Text to Image{% endif %}</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Video & Production Tools -->
+        <div>
+            <p class="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2" x-show="!sidebarCollapsed">
+                {% if DIR == 'rtl' %}استوديوهات الفيديو{% else %}Video Studios{% endif %}
+            </p>
+            <nav class="space-y-1">
+                <a href="{% url 'text_to_video_workspace' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}تحويل النص لفيديو{% else %}Text to Video{% endif %}</span>
+                </a>
+
+                <a href="{% url 'image_to_video_workspace' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}تحويل الصورة لفيديو{% else %}Image to Video{% endif %}</span>
+                </a>
+
+                <a href="{% url 'reference_to_video_workspace' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}فيديو مرجعي (Seedance){% else %}Reference Video (Seedance){% endif %}</span>
+                </a>
+
+                <a href="{% url 'lipsync_workspace' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <span class="w-2 h-2 rounded-full bg-pink-500"></span>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}مزامنة الشفاه (Lip-Sync){% else %}Lip-Sync Studio{% endif %}</span>
+                </a>
+
+                <a href="{% url 'motion_control_workspace' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}التحكم بالحركة{% else %}Motion Control{% endif %}</span>
+                </a>
+
+                <a href="{% url 'avatar_video_workspace' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}الأفاتار الرقمي{% else %}Avatar Video{% endif %}</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Management & Platform -->
+        <div>
+            <p class="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-2" x-show="!sidebarCollapsed">
+                {% if DIR == 'rtl' %}المنصة والإدارة{% else %}Platform{% endif %}
+            </p>
+            <nav class="space-y-1">
+                <a href="{% url 'pricing' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}الخطط والترقية{% else %}Plans & Upgrade{% endif %}</span>
+                </a>
+
+                <a href="{% url 'affiliate_dashboard' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}برنامج الشركاء (Affiliate){% else %}Affiliate Program{% endif %}</span>
+                </a>
+
+                <a href="{% url 'blog_list' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}المدونة والأخبار{% else %}Blog & Insights{% endif %}</span>
+                </a>
+
+                <a href="{% url 'ticket_list' %}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-2xl text-sm font-semibold text-gray-600 hover:bg-gray-50 hover:text-gray-900">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <span x-show="!sidebarCollapsed">{% if DIR == 'rtl' %}الدعم الفني{% else %}Help & Support{% endif %}</span>
+                </a>
+            </nav>
+        </div>
+
+    </div>
+
+    <!-- Bottom Profile Card -->
+    <div class="p-4 border-t border-gray-100">
+        {% if user.is_authenticated %}
+            <div class="p-2 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-between" x-data="{ menuOpen: false }">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center flex-shrink-0">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <div class="truncate text-left" x-show="!sidebarCollapsed">
+                        <p class="text-sm font-bold text-gray-900 truncate">{{ user.username }}</p>
+                        <p class="text-xs text-gray-500 truncate">{{ user.email }}</p>
+                    </div>
+                </div>
+                <div class="relative" x-show="!sidebarCollapsed">
+                    <button @click="menuOpen = !menuOpen" class="p-1 text-gray-400 hover:text-gray-700">⋮</button>
+                    <div x-show="menuOpen" @click.away="menuOpen = false" x-cloak
+                         class="absolute {% if DIR == 'rtl' %}left-0{% else %}right-0{% endif %} bottom-12 w-44 bg-white border border-gray-100 shadow-xl rounded-2xl py-2 z-50 text-sm">
+                        <a href="{% url 'profile' %}" class="block px-4 py-2 hover:bg-gray-50 text-gray-700">{% if DIR == 'rtl' %}حسابي{% else %}My Profile{% endif %}</a>
+                        {% if user.is_staff %}
+                            <a href="/admin/" target="_blank" class="block px-4 py-2 hover:bg-gray-50 text-emerald-600 font-semibold">{% if DIR == 'rtl' %}لوحة الأدمن{% else %}Django Admin{% endif %}</a>
+                        {% endif %}
+                        <a href="{% url 'logout' %}" class="block px-4 py-2 hover:bg-rose-50 text-rose-600">{% if DIR == 'rtl' %}تسجيل الخروج{% else %}Sign Out{% endif %}</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="flex flex-col gap-2" x-show="!sidebarCollapsed">
+                <a href="{% url 'login' %}" class="w-full text-center py-2.5 rounded-2xl border border-gray-200 text-sm font-bold text-gray-700 hover:bg-gray-50">
+                    {% if DIR == 'rtl' %}تسجيل الدخول{% else %}Sign In{% endif %}
+                </a>
+                <a href="{% url 'register' %}" class="w-full text-center py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-sm font-bold text-white shadow-md shadow-emerald-500/20">
+                    {% if DIR == 'rtl' %}إنشاء حساب جديد{% else %}Get Started{% endif %}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</aside>

@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}استوديو تحويل النص إلى كلام — نكسميديا{% else %}Text to Speech Studio — NexMedia{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto space-y-8" x-data="ttsStudio()">
+
+    <!-- Studio Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-xl font-extrabold text-gray-900 flex items-center gap-2.5">
+                <span>🎙️</span>
+                <span>{% if DIR == 'rtl' %}{{ tool_title_ar }}{% else %}{{ tool_title_en }}{% endif %}</span>
+            </h1>
+            <p class="text-xs text-gray-400 mt-1">
+                {% if DIR == 'rtl' %}حوّل نصوصك إلى مقاطع صوتية واقعية باستخدام أحدث نماذج الذكاء الاصطناعي مع تحكم كامل بالنبرة اللهجة{% else %}Generate natural, expressive speech with native Arabic & multilingual accents.{% endif %}
+            </p>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="px-3 py-1.5 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-bold">
+                ⚡ {% if DIR == 'rtl' %}التكلفة التقديرية:{% else %}Estimated Cost:{% endif %} <span x-text="estimatedCost">0.1</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Controls Column -->
+        <div class="lg:col-span-2 space-y-5">
+            <div class="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm space-y-4">
+
+                <!-- Textarea -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-xs font-bold text-gray-700">
+                            {% if DIR == 'rtl' %}النص المراد تحويله{% else %}Input Text{% endif %}
+                        </label>
+                        <span class="text-[11px] text-gray-400 font-mono" x-text="`${text.length} {% if DIR == 'rtl' %}حرف{% else %}chars{% endif %}`"></span>
+                    </div>
+                    <textarea x-model="text"
+                              @input="estimateCost()"
+                              rows="6"
+                              placeholder="{% if DIR == 'rtl' %}اكتب أو الصق النص هنا لتوليد الصوت باللغة العربية أو الإنجليزية...{% else %}Enter or paste text here to generate natural speech...{% endif %}"
+                              class="w-full p-4 rounded-2xl border border-gray-100 bg-gray-50/50 text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"></textarea>
+                </div>
+
+                <!-- Voice Selection & Quality -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1.5">
+                            {% if DIR == 'rtl' %}الصوت المختار{% else %}Voice{% endif %}
+                        </label>
+                        <select x-model="selectedVoice" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            {% for v in voices %}
+                                <option value="{{ v.Name }}" {% if forloop.first %}selected{% endif %}>
+                                    {{ v.Name }} ({{ v.Accent|default:"عربي" }} - {{ v.Gender }})
+                                </option>
+                            {% empty %}
+                                <option value="صبرينة">صبرينة (Sabrina)</option>
+                                <option value="طلال">طلال (Talal)</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1.5">
+                            {% if DIR == 'rtl' %}مستوى الجودة{% else %}Quality Level{% endif %}
+                        </label>
+                        <select x-model="quality" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="Standard">Standard (Gemini Flash)</option>
+                            <option value="High">High Fidelity (Studio HQ)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Generate Action Button -->
+                <button @click="generateSpeech()"
+                        :disabled="isGenerating || text.trim().length === 0"
+                        class="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold text-sm shadow-md shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all">
+                    <span x-show="!isGenerating">⚡ {% if DIR == 'rtl' %}بدء توليد الصوت الآن{% else %}Generate Speech{% endif %}</span>
+                    <span x-show="isGenerating">⏳ {% if DIR == 'rtl' %}جارِ المعالجة في Inngest...{% else %}Processing via Inngest Queue...{% endif %}</span>
+                </button>
+
+            </div>
+
+            <!-- Realtime Generation Result Card -->
+            <div x-show="lastResultUrl" x-cloak class="p-6 rounded-3xl bg-emerald-50/70 border border-emerald-100 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-extrabold text-emerald-800 flex items-center gap-1.5">
+                        <span>✓</span>
+                        <span>{% if DIR == 'rtl' %}تم اكتمال توليد المقطع الصوتي!{% else %}Audio Ready for Playback!{% endif %}</span>
+                    </span>
+                    <a :href="lastResultUrl" target="_blank" download class="text-xs font-bold text-emerald-700 hover:underline">
+                        {% if DIR == 'rtl' %}تحميل WAV{% else %}Download WAV{% endif %} ⤓
+                    </a>
+                </div>
+                <audio :src="lastResultUrl" controls class="w-full"></audio>
+            </div>
+        </div>
+
+        <!-- History Column -->
+        <div class="space-y-4">
+            <div class="p-6 rounded-3xl bg-white border border-gray-100 shadow-sm">
+                <h3 class="text-xs font-extrabold text-gray-900 uppercase tracking-wider mb-4">
+                    {% if DIR == 'rtl' %}سجل التوليد الأخير{% else %}Recent Generations{% endif %}
+                </h3>
+                <div class="space-y-3">
+                    {% for item in history %}
+                        <div class="p-3 rounded-2xl bg-gray-50/70 border border-gray-100 space-y-1.5">
+                            <div class="flex items-center justify-between text-[11px]">
+                                <span class="font-bold text-gray-800">{{ item.voice_name }}</span>
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold {% if item.status == 'completed' %}bg-emerald-100 text-emerald-700{% elif item.status == 'failed' %}bg-rose-100 text-rose-700{% else %}bg-amber-100 text-amber-700{% endif %}">
+                                    {{ item.status }}
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-500 truncate">{{ item.text }}</p>
+                            {% if item.result_url %}
+                                <audio src="{{ item.result_url }}" controls class="w-full h-7 mt-1"></audio>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p class="text-xs text-gray-400 text-center py-4">
+                            {% if DIR == 'rtl' %}لا يوجد سجل سابق{% else %}No generation history yet{% endif %}
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    function ttsStudio() {
+        return {
+            text: '',
+            selectedVoice: 'صبرينة',
+            quality: 'Standard',
+            estimatedCost: '0.10',
+            isGenerating: false,
+            lastResultUrl: null,
+
+            estimateCost() {
+                const len = this.text.length;
+                this.estimatedCost = Math.max(len * 0.001, 0.1).toFixed(2);
+            },
+
+            async generateSpeech() {
+                if (!this.text.trim()) return;
+                this.isGenerating = true;
+                this.lastResultUrl = null;
+
+                try {
+                    const res = await fetch("{% url 'tts_generate' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({
+                            text: this.text,
+                            voice_name: this.selectedVoice,
+                            quality: this.quality
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (!res.ok) {
+                        alert(data.error || 'Failed to start generation');
+                        this.isGenerating = false;
+                        return;
+                    }
+
+                    // Poll or wait for Centrifugo event
+                    // If running locally, synthetic completion handler displays result in a few seconds
+                    setTimeout(() => {
+                        this.isGenerating = false;
+                    }, 2500);
+
+                } catch (e) {
+                    alert('Error: ' + e);
+                    this.isGenerating = false;
+                }
+            }
+        };
+    }
+</script>
+{% endblock %}

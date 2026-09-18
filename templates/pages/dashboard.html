@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}لوحة التحكم — منصة نكسميديا للذكاء الاصطناعي{% else %}Dashboard — NexMedia AI Platform{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="space-y-8" x-data="dashboardAudioPlayer()">
+
+    <!-- SECTION 1: Quick Actions -->
+    <div>
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-extrabold text-gray-900">
+                {% if DIR == 'rtl' %}إجراءات سريعة{% else %}Quick actions{% endif %}
+            </h2>
+            <a href="{% url 'tts_workspace' %}" class="text-xs font-bold text-gray-400 hover:text-emerald-600 transition-colors">
+                {% if DIR == 'rtl' %}عرض الكل{% else %}See all{% endif %}
+            </a>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+
+            <!-- Card 1: Instant Speech Text -->
+            <a href="{% url 'tts_workspace' %}" class="group p-4 rounded-3xl bg-emerald-50/40 border border-emerald-100/70 hover:bg-emerald-50 hover:shadow-lg hover:shadow-emerald-500/10 transition-all flex flex-col justify-between h-44">
+                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    🖥️
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-xs text-gray-900 leading-snug">
+                        {% if DIR == 'rtl' %}تحويل النص لصوت{% else %}Instant Speech Text{% endif %}
+                    </h3>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-emerald-100/50">
+                        <span class="text-[10px] font-semibold text-gray-500 truncate">Gemini AI</span>
+                        <span class="w-5 h-5 rounded-full bg-white text-emerald-600 text-[10px] flex items-center justify-center shadow-xs">▶</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card 2: Voice to Text -->
+            <a href="{% url 'stt_workspace' %}" class="group p-4 rounded-3xl bg-blue-50/40 border border-blue-100/70 hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-500/10 transition-all flex flex-col justify-between h-44">
+                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    📚
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-xs text-gray-900 leading-snug">
+                        {% if DIR == 'rtl' %}تفريغ الصوت لنص{% else %}Voice to Text{% endif %}
+                    </h3>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-blue-100/50">
+                        <span class="text-[10px] font-semibold text-gray-500 truncate">Whisper AI</span>
+                        <span class="w-5 h-5 rounded-full bg-white text-blue-600 text-[10px] flex items-center justify-center shadow-xs">▶</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card 3: Text to Video -->
+            <a href="{% url 'text_to_video_workspace' %}" class="group p-4 rounded-3xl bg-indigo-50/40 border border-indigo-100/70 hover:bg-indigo-50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all flex flex-col justify-between h-44">
+                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    🎬
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-xs text-gray-900 leading-snug">
+                        {% if DIR == 'rtl' %}نص إلى فيديو{% else %}Text to Video{% endif %}
+                    </h3>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-indigo-100/50">
+                        <span class="text-[10px] font-semibold text-gray-500 truncate">Veo 3.1 Fast</span>
+                        <span class="w-5 h-5 rounded-full bg-white text-indigo-600 text-[10px] flex items-center justify-center shadow-xs">▶</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card 4: Reference Video -->
+            <a href="{% url 'reference_to_video_workspace' %}" class="group p-4 rounded-3xl bg-amber-50/40 border border-amber-100/70 hover:bg-amber-50 hover:shadow-lg hover:shadow-amber-500/10 transition-all flex flex-col justify-between h-44">
+                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    🤖
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-xs text-gray-900 leading-snug">
+                        {% if DIR == 'rtl' %}فيديو Seedance{% else %}Seedance Motion{% endif %}
+                    </h3>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-amber-100/50">
+                        <span class="text-[10px] font-semibold text-gray-500 truncate">Seedance v1</span>
+                        <span class="w-5 h-5 rounded-full bg-white text-amber-600 text-[10px] flex items-center justify-center shadow-xs">▶</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card 5: Lip-Sync Studio -->
+            <a href="{% url 'lipsync_workspace' %}" class="group p-4 rounded-3xl bg-pink-50/40 border border-pink-100/70 hover:bg-pink-50 hover:shadow-lg hover:shadow-pink-500/10 transition-all flex flex-col justify-between h-44">
+                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    🎙️
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-xs text-gray-900 leading-snug">
+                        {% if DIR == 'rtl' %}مزامنة الشفاه{% else %}Lip-Sync Studio{% endif %}
+                    </h3>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-pink-100/50">
+                        <span class="text-[10px] font-semibold text-gray-500 truncate">Vidu Studio</span>
+                        <span class="w-5 h-5 rounded-full bg-white text-pink-600 text-[10px] flex items-center justify-center shadow-xs">▶</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card 6: Avatar Video -->
+            <a href="{% url 'avatar_video_workspace' %}" class="group p-4 rounded-3xl bg-teal-50/40 border border-teal-100/70 hover:bg-teal-50 hover:shadow-lg hover:shadow-teal-500/10 transition-all flex flex-col justify-between h-44">
+                <div class="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                    👤
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-xs text-gray-900 leading-snug">
+                        {% if DIR == 'rtl' %}الأفاتار الرقمي{% else %}Avatar Studio{% endif %}
+                    </h3>
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-teal-100/50">
+                        <span class="text-[10px] font-semibold text-gray-500 truncate">Kling AI</span>
+                        <span class="w-5 h-5 rounded-full bg-white text-teal-600 text-[10px] flex items-center justify-center shadow-xs">▶</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- SECTION 2: Create or Clone Banners -->
+    <div>
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-extrabold text-gray-900">
+                {% if DIR == 'rtl' %}إنشاء وتصميم الأصوات والوسائط{% else %}Create or customize media{% endif %}
+            </h2>
+            <a href="{% url 'tts_workspace' %}" class="text-xs font-bold text-gray-400 hover:text-emerald-600">
+                {% if DIR == 'rtl' %}عرض الكل{% else %}See all{% endif %}
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+            <!-- Banner 1: Voice Design -->
+            <a href="{% url 'tts_workspace' %}" class="p-6 rounded-3xl bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/20 border border-emerald-100/80 hover:shadow-xl hover:shadow-emerald-500/10 transition-all flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-2xl flex-shrink-0">
+                    🎨
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-sm text-gray-900">
+                        {% if DIR == 'rtl' %}تصميم النبرة الصوتية{% else %}Voice Design{% endif %}
+                    </h3>
+                    <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+                        {% if DIR == 'rtl' %}اختر الصوت، اللهجة، والمشاعر لتوليد نبرة صوتية واقعية تناسب مشروعك.{% else %}Design an entirely custom voice style with dialed emotions and accents.{% endif %}
+                    </p>
+                </div>
+            </a>
+
+            <!-- Banner 2: Motion Control -->
+            <a href="{% url 'motion_control_workspace' %}" class="p-6 rounded-3xl bg-gradient-to-br from-purple-50/80 via-white to-purple-50/20 border border-purple-100/80 hover:shadow-xl hover:shadow-purple-500/10 transition-all flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-600 flex items-center justify-center text-2xl flex-shrink-0">
+                    💃
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-sm text-gray-900">
+                        {% if DIR == 'rtl' %}نقل وتحريك الشخصيات{% else %}Motion Choreography{% endif %}
+                    </h3>
+                    <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+                        {% if DIR == 'rtl' %}انقل حركات أي فيديو لشخصية صورتك بدقة متناهية عبر الذكاء الاصطناعي.{% else %}Transfer human motions from video directly onto digital characters.{% endif %}
+                    </p>
+                </div>
+            </a>
+
+            <!-- Banner 3: Voice Collections -->
+            <a href="#voice-library" class="p-6 rounded-3xl bg-gradient-to-br from-amber-50/80 via-white to-amber-50/20 border border-amber-100/80 hover:shadow-xl hover:shadow-amber-500/10 transition-all flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center text-2xl flex-shrink-0">
+                    ⚡
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-sm text-gray-900">
+                        {% if DIR == 'rtl' %}مكتبة الأصوات المختارة{% else %}Voice Collections{% endif %}
+                    </h3>
+                    <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+                        {% if DIR == 'rtl' %}أصوات طبيعية مختارة ومدرّبة مسبقاً بمختلف اللهجات العربية والعالمية.{% else %}Curated studio AI voices with native accents for every use case.{% endif %}
+                    </p>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- SECTION 3: Latest from the Library Table -->
+    <div id="voice-library" class="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+        <div class="p-6 flex items-center justify-between border-b border-gray-50">
+            <div>
+                <h2 class="text-base font-extrabold text-gray-900">
+                    {% if DIR == 'rtl' %}أحدث الأصوات من المكتبة{% else %}Latest from the library{% endif %}
+                </h2>
+                <p class="text-xs text-gray-400 mt-0.5">
+                    {% if DIR == 'rtl' %}استمع لمعاينة الأصوات مباشرة أو استخدمها في استوديو التوليد{% else %}Preview and audition authentic voices instantly{% endif %}
+                </p>
+            </div>
+            <a href="{% url 'tts_workspace' %}" class="px-4 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50 text-xs font-bold text-gray-700 transition-all">
+                {% if DIR == 'rtl' %}استعراض المكتبة كاملة{% else %}Explore Library{% endif %}
+            </a>
+        </div>
+
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50/60 text-gray-400 uppercase text-[10px] font-bold tracking-wider border-b border-gray-50">
+                    <tr>
+                        <th class="py-3 px-6 w-10">
+                            <input type="checkbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                        </th>
+                        <th class="py-3 px-6">{% if DIR == 'rtl' %}الاسم والوصف{% else %}Name & Description{% endif %}</th>
+                        <th class="py-3 px-6">{% if DIR == 'rtl' %}اللهجة والمنطقة{% else %}Voice Country{% endif %}</th>
+                        <th class="py-3 px-6">{% if DIR == 'rtl' %}الاستخدام{% else %}Usage{% endif %}</th>
+                        <th class="py-3 px-6">{% if DIR == 'rtl' %}النوع{% else %}Tier{% endif %}</th>
+                        <th class="py-3 px-6 text-center">{% if DIR == 'rtl' %}إجراءات ومعاينة{% else %}Actions{% endif %}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    {% for voice in voices|slice:":10" %}
+                    <tr class="hover:bg-gray-50/50 transition-colors group">
+                        <td class="py-4 px-6">
+                            <input type="checkbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-100 to-teal-100 text-emerald-700 font-bold flex items-center justify-center flex-shrink-0 text-sm shadow-xs">
+                                    {{ voice.Name|first|upper }}
+                                </div>
+                                <div>
+                                    <p class="font-extrabold text-sm text-gray-900 group-hover:text-emerald-600 transition-colors">{{ voice.Name }}</p>
+                                    <p class="text-xs text-gray-400">{{ voice.GeminiVoice }} · {{ voice.Gender }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100/70 border border-gray-100 text-xs font-semibold text-gray-700">
+                                <span>{{ voice.country.flag }}</span>
+                                <span>{{ voice.Accent|default:voice.country.name }}</span>
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 text-xs font-bold text-gray-600">
+                            📥 {{ voice.usage_count }}
+                        </td>
+                        <td class="py-4 px-6">
+                            {% if voice.IsPremium %}
+                                <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold">Premium</span>
+                            {% else %}
+                                <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">Standard</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-4 px-6">
+                            <div class="flex items-center justify-center gap-2">
+                                <!-- Audio Play Button -->
+                                <button @click="togglePlay('{{ voice.Name }}')"
+                                        class="w-8 h-8 rounded-xl bg-gray-100 hover:bg-emerald-500 hover:text-white flex items-center justify-center text-xs text-gray-700 transition-all shadow-xs">
+                                    <span x-text="currentPlaying === '{{ voice.Name }}' ? '⏸' : '▶'"></span>
+                                </button>
+                                <!-- Open in Studio Button -->
+                                <a href="{% url 'tts_workspace' %}?voice={{ voice.Name }}"
+                                   class="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-xs text-gray-700 transition-all">
+                                    ＋
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="py-8 text-center text-gray-400 text-xs">
+                            {% if DIR == 'rtl' %}لا توجد أصوات متوفرة حالياً{% else %}No voices catalog found{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- Synthetic Audio Preview Generator for Vernal Data Table -->
+<script>
+    function dashboardAudioPlayer() {
+        return {
+            currentPlaying: null,
+            audioCtx: null,
+
+            togglePlay(voiceName) {
+                if (this.currentPlaying === voiceName) {
+                    this.stop();
+                    return;
+                }
+                this.stop();
+                this.currentPlaying = voiceName;
+
+                // Play a brief melodic audio preview tone via Web Audio API
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    this.audioCtx = ctx;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 1.5);
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 1.5);
+                    setTimeout(() => {
+                        if (this.currentPlaying === voiceName) {
+                            this.currentPlaying = null;
+                        }
+                    }, 1500);
+                } catch (e) {
+                    this.currentPlaying = null;
+                }
+            },
+
+            stop() {
+                if (this.audioCtx) {
+                    try { this.audioCtx.close(); } catch(e){}
+                }
+                this.currentPlaying = null;
+            }
+        };
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,114 @@
+[
+  {
+    "id": "dialect-5cfe2bc3",
+    "Name": "مصرية",
+    "Value": "لهجة مصرية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 1
+  },
+  {
+    "id": "dialect-af264495",
+    "Name": "مغربية",
+    "Value": "لهجة مغربية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 2
+  },
+  {
+    "id": "dialect-6a84f297",
+    "Name": "جزائرية",
+    "Value": "لهجة جزائرية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 3
+  },
+  {
+    "id": "dialect-71f2e671",
+    "Name": "إماراتية",
+    "Value": "لهجة إماراتية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 4
+  },
+  {
+    "id": "dialect-b81c8a28",
+    "Name": "كويتية",
+    "Value": "لهجة كويتية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 5
+  },
+  {
+    "id": "dialect-0ac40b67",
+    "Name": "سورية",
+    "Value": "لهجة سورية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 6
+  },
+  {
+    "id": "dialect-df321213",
+    "Name": "تونسية",
+    "Value": "لهجة تونسية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 7
+  },
+  {
+    "id": "dialect-38a4bb43",
+    "Name": "أردنية",
+    "Value": "لهجة أردنية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 8
+  },
+  {
+    "id": "dialect-afc01459",
+    "Name": "عمانية",
+    "Value": "لهجة عمانية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 9
+  },
+  {
+    "id": "dialect-d9283da6",
+    "Name": "قطرية",
+    "Value": "لهجة قطرية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 10
+  },
+  {
+    "id": "dialect-619c800d",
+    "Name": "لبنانية",
+    "Value": "لهجة لبنانية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 11
+  },
+  {
+    "id": "dialect-a6855333",
+    "Name": "عراقية",
+    "Value": "لهجة عراقية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 12
+  },
+  {
+    "id": "dialect-58546f39",
+    "Name": "فصحى",
+    "Value": "فصحى",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 13
+  },
+  {
+    "id": "dialect-52bfeb0a",
+    "Name": "سعودية",
+    "Value": "لهجة سعودية",
+    "IsActive": true,
+    "IsPremium": false,
+    "Order": 0
+  }
+]

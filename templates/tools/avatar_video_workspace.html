@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if DIR == 'rtl' %}الأفاتار الرقمي المتحدث — نكسميديا{% else %}Digital Avatar Video — NexMedia{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8" x-data="{ isSubmitting: false }">
+    <div>
+        <h1 class="text-xl font-extrabold text-gray-900 flex items-center gap-2.5">
+            <span>👤</span>
+            <span>{% if DIR == 'rtl' %}{{ tool_title_ar }}{% else %}{{ tool_title_en }}{% endif %}</span>
+        </h1>
+        <p class="text-xs text-gray-400 mt-1">
+            {% if DIR == 'rtl' %}اصنع مذيعين ومقدمي محتوى افتراضيين يتحدثون بصوتك ورسالتك بنقرة واحدة عبر Kling Avatar{% else %}Create lifelike virtual presenters and brand avatars from portrait photos.{% endif %}
+        </p>
+    </div>
+
+    <div class="p-8 rounded-3xl bg-white border border-gray-100 shadow-sm space-y-5">
+        <form method="POST" action="{% url 'avatar_video_generate' %}" enctype="multipart/form-data" @submit="isSubmitting = true" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-2">{% if DIR == 'rtl' %}صورة الوجه أو الشخصية (Portrait Image){% else %}Portrait Image{% endif %}</label>
+                <input type="file" name="avatar_image" accept="image/*" required class="w-full p-4 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 text-xs">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-700 mb-2">{% if DIR == 'rtl' %}تعليمات وسلوك الأفاتار (Prompt){% else %}Avatar Behavior Instructions{% endif %}</label>
+                <input type="text" name="prompt" placeholder="{% if DIR == 'rtl' %}مثال: مقدم نشرة إخبارية واثق ينظر مباشرة إلى الكاميرا...{% else %}e.g. Confident presenter speaking directly to audience...{% endif %}"
+                       class="w-full px-4 py-2.5 rounded-xl border border-gray-100 bg-gray-50 text-xs">
+            </div>
+
+            <button type="submit" :disabled="isSubmitting"
+                    class="w-full py-3.5 rounded-2xl bg-cyan-600 hover:bg-cyan-700 text-white font-extrabold text-sm shadow-md shadow-cyan-600/25 transition-all">
+                <span x-show="!isSubmitting">⚡ {% if DIR == 'rtl' %}توليد فيديو الأفاتار (8.0 رصيد - طابور avatar_queue){% else %}Render Avatar Video (8.0 Credits - avatar_queue){% endif %}</span>
+                <span x-show="isSubmitting">⏳ {% if DIR == 'rtl' %}جارِ المعالجة في Inngest...{% else %}Processing in Inngest...{% endif %}</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- History -->
+    <div class="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
+        <h3 class="text-xs font-extrabold text-gray-900 uppercase tracking-wider mb-4">{% if DIR == 'rtl' %}سجل فيديوهات الأفاتار{% else %}Recent Avatar Videos{% endif %}</h3>
+        <div class="space-y-3">
+            {% for item in history %}
+                <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-between">
+                    <span class="text-xs font-bold text-gray-800">Avatar Video #{{ item.id|stringformat:".8s" }}</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-100 text-cyan-700">{{ item.status }}</span>
+                </div>
+            {% empty %}
+                <p class="text-xs text-gray-400 text-center py-4">{% if DIR == 'rtl' %}لا توجد فيديوهات سابقة{% else %}No avatar videos yet{% endif %}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
